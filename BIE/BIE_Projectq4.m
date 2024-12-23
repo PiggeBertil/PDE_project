@@ -15,17 +15,18 @@ vecdsdt = sqrt(rprimvec.^2+rvec.^2);
 p = [0,4];
 nu = [nu1; nu2];
 k=1;
-for i=1:N
-    for j=1:N
-        nu_j = [nu1(i), nu2(i)];
-        r_i = [y1(i), y2(i)];
+for i = 1:N
+    for j = 1:N
+        nu_i = [nu1(i), nu2(i)];
+    
         r_j = [y1(j), y2(j)];
-        difference = r_j - r_i;
+        r_i = [y1(i), y2(i)];
         
-        
-        taljare = 1i/4 * k*(difference)/norm(difference) * besselh(1,k*norm(difference));
-
-        A_k(i,j) = dot(nu_j, taljare);
+        diff = r_i - r_j;
+        hankel_diff = besselh(1,1,k*norm(diff));
+        auxillary = (1i*k/4)*hankel_diff/(norm(diff)); 
+    
+        A_k(i,j) = dot(nu_i, diff)*auxillary;
     end
 end
 
