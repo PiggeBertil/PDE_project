@@ -38,10 +38,10 @@ end
 
 %We need to fix the diagonals
 for i = 1:N
-numerator = rprimvec(i)^2 - 0.5*rbisvec(i)*rvec(i)+0.5*rvec(i)^2;
-denominator = 2*pi*(rprimvec(i)^2 + rvec(i)^2)^(3/2);
-dsdt = dsdtvec(i);
-A(i,i) = numerator/denominator;
+    numerator = rprimvec(i)^2 - 0.5*rbisvec(i)*rvec(i)+0.5*rvec(i)^2;
+    denominator = 2*pi*(rprimvec(i)^2 + rvec(i)^2)^(3/2);
+    dsdt = dsdtvec(i);
+    A(i,i) = numerator/denominator;
 end
 
 subplot(1,3,1)
@@ -63,19 +63,8 @@ colorbar
 title('abs kmat')
 
 %% Problem 2
-
 p = [0; -3];
 uAn = @(x,y) -(1i/4)*besselh(0,1,k*norm([x;y]-p));
-
-%{
-dx_u = @(x,y) 1i*k./(4*vecnorm([x;y]-p)) .* besselh(1,1,k*vecnorm([x;y]-p)).*(x-p(1));
-dy_u = @(x,y) 1i*k./(4*vecnorm([x;y]-p)) .* besselh(1,1,k*vecnorm([x;y]-p)).*(y-p(2));
-
-g1 = dx_u(y1,y2).*nu1;
-g2 = dy_u(y1,y2).*nu2;
-
-gvec = g1.'+g2.';
-%}
 
 gvec = 1i*k/4 * besselh(1,1,k*vecnorm([y1;y2]-p))./vecnorm([y1;y2]-p) .* (dot(([y1;y2]-p),[nu1;nu2]));
 kmat = (-eye(N)/2+ 2*pi/N* A *diag(dsdtvec));
@@ -91,17 +80,17 @@ uAnField = zeros(M,M);
 
 
 for ix1=1:M
-for ix2=1:M
-    x1=x1field(ix1);
-    x2=x2field(ix2);
-    t=angle(complex(x1,x2));
-    radius= 3 + cos(4 * t + pi); %formula for rvec
-    if x1^2+ x2^2 < radius^2
-        phivec= (-1i / 4) * besselh(0,1, k * vecnorm([y1;y2] - [x1;x2])); %kernel expression in terms of xi, yi, nui, i=1,2
-        vfield(ix1,ix2) = (phivec *(hvec.* dsdtvec).')*2*pi/N; %trapezoidal rule
-        uAnField(ix1,ix2) = uAn(x1,x2);
+    for ix2=1:M
+        x1=x1field(ix1);
+        x2=x2field(ix2);
+        t=angle(complex(x1,x2));
+        radius= 3 + cos(4 * t + pi); %formula for rvec
+        if x1^2+ x2^2 < radius^2
+            phivec= (-1i / 4) * besselh(0,1, k * vecnorm([y1;y2] - [x1;x2])); %kernel expression in terms of xi, yi, nui, i=1,2
+            vfield(ix1,ix2) = (phivec *(hvec.* dsdtvec).')*2*pi/N; %trapezoidal rule
+            uAnField(ix1,ix2) = uAn(x1,x2);
+        end
     end
-end
 end
 
 t = 0;
