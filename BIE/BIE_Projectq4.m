@@ -57,7 +57,7 @@ for ix1=1:M
         radius= 3+cos(4*t+pi); %formula for rvec
         if x1^2+ x2^2< radius^2
            phivec = (-1i / 4) * besselh(0, k * vecnorm([y1;y2] - [x1;x2])); %kernel expression in terms of xi, yi, nui, i=1,2
-           exactfield(ix1,ix2) = real(1i/4*besselh(0,k*sqrt(x1.^2+(x2-4).^2)));
+           exactfield(ix1,ix2) = real(-1i/4*besselh(0,k*sqrt(x1.^2+(x2-4).^2)));
            ufield(ix1,ix2) = (phivec*((hvec.* vecdsdt).')*2*pi/N);
         end
     end
@@ -67,9 +67,10 @@ mean_sub_matrix = mean(num_Sub_matrix, 'all');
 real_sub_matrix = exactfield(M/3:M*2/3,M/3:M*2/3);
 mean_real_sub = mean(real_sub_matrix,'all');
 
+t=0;
 re_ufield = real(ufield*exp(-1i*k*t));
 im_ufield = imag(ufield*exp(-1i*k*t));
-errorfield = log10(abs(ufield-exactfield));
+errorfield = log10(abs(re_ufield-exactfield));
 
 %% 
 imagesc(x1field, x2field, exactfield.')
