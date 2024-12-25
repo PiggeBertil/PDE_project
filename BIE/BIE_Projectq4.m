@@ -62,15 +62,21 @@ for ix1=1:M
         end
     end
 end
-num_Sub_matrix = ufield(M/3:M*2/3,M/3:M*2/3);
-mean_sub_matrix = mean(num_Sub_matrix, 'all');
-real_sub_matrix = exactfield(M/3:M*2/3,M/3:M*2/3);
-mean_real_sub = mean(real_sub_matrix,'all');
+
+
 
 t=0;
 re_ufield = real(ufield*exp(-1i*k*t));
 im_ufield = imag(ufield*exp(-1i*k*t));
+
+re_exactfield = real(exactfield);
+im_exactfield = imag(exactfield);
 errorfield = log10(abs(re_ufield-exactfield));
+
+num_Sub_matrix = re_ufield(M/3:M*2/3,M/3:M*2/3);
+anal_sub_matrix = re_exactfield(M/3:M*2/3,M/3:M*2/3);
+mean_real_sub = mean(anal_sub_matrix,'all');
+mean_sub_matrix = mean(num_Sub_matrix, 'all');
 
 %% 
 imagesc(x1field, x2field, exactfield.')

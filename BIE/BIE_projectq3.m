@@ -71,13 +71,13 @@ ufield_1 = ufield-mean_sub_matrix+mean_real_sub;
 ufield_2=ufield-mean_sub_matrix;
 errorfield = log10(abs(ufield_1-exactfield));
 
-imagesc(x1field, x2field, ufield_2.')
+imagesc(x1field, x2field, exactfield.')
 
 axis xy
 colormap turbo
 pbaspect([1 1 1])
 colorbar
-title('Numerical solution of u(x,y)')
+title('Analytical solution of u(x,y)')
 
 %%
 imagesc(x1field, x2field, errorfield.')
