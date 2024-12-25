@@ -1,4 +1,4 @@
-N=300;
+N=1000;
 tvec = linspace(-pi+2*pi/N, pi, N);
 rvec = 3+cos(4.*tvec+pi);
 rprimvec = -4*sin(4.*tvec+pi);

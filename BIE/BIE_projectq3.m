@@ -1,4 +1,4 @@
-N=300;
+N=1000;
 tvec = linspace(-pi+2*pi/N, pi, N);
 rvec = 3+cos(4*tvec+pi);
 rprimvec = -4*sin(4.*tvec+pi);
@@ -45,6 +45,7 @@ g_x = dx_u_func(y1,y2).*nu1;
 g_y = dy_u_func(y1,y2).*nu2;
 gvec = g_y'+g_x';
 Aug_matrix = (-eye(N)/2+ 2*pi/N* A_aug* diag(vecdsdt)) + ones(N);
+cond_nr = cond(Aug_matrix);
 hvec = Aug_matrix\gvec;
 hvec = hvec.';
 

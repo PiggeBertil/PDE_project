@@ -1,4 +1,4 @@
-N=2000;
+N=300;
 tvec = linspace(-pi+2*pi/N, pi, N);
 rvec = 3+cos(4*tvec+pi);
 rprimvec = -4*sin(4.*tvec+pi);
@@ -44,7 +44,6 @@ dy_u_func = @(x,y) exp((x + 0.3 * y) / 3) .* (0.1.*sin((0.3.*x - y) / 3) - (1/3)
 g_x = dx_u_func(y1,y2).*nu1;
 g_y = dy_u_func(y1,y2).*nu2;
 gvec = g_y'+g_x';
-cond_nr = cond(-1/2*eye(N)+A);
 hvec = (-eye(N)/2+ 2*pi/N* A* diag(vecdsdt))\gvec;
 hvec = hvec.';
 
