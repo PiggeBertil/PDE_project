@@ -12,11 +12,11 @@ nu2 = nu2 ./ sqrt(rvec.^2 + rprimvec.^2);
 vecdsdt = sqrt(rprimvec.^2 + rvec.^2);
 
 index = 1;
-k_step = 20001;
-times_to_loop = linspace(0,2,k_step);
-cond_values = zeros(1,k_step); % Store condition numbers
+steps = 20001;
+iterations = linspace(0,2,steps);
+cond_vals = zeros(1,steps); % Store condition numbers
 
-for k = times_to_loop
+for k = iterations
     A_k = zeros(N, N);
     % Compute A_k
     for i = 1:N
@@ -43,7 +43,7 @@ for k = times_to_loop
     Kmat = (-eye(N)/2 + 2*pi/N * A_k * diag(vecdsdt));
 
     % Compute and store the condition number
-    cond_values(index) = log10(cond(Kmat));
+    cond_vals(index) = log10(cond(Kmat));
     index = index + 1;
 end
 %%
