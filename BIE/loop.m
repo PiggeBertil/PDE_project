@@ -11,7 +11,7 @@ nu1 = nu1 ./ sqrt(rvec.^2 + rprimvec.^2);
 nu2 = nu2 ./ sqrt(rvec.^2 + rprimvec.^2);
 vecdsdt = sqrt(rprimvec.^2 + rvec.^2);
 
-k_values = 0:0.0x001:2.0001; % k values
+k_values = 0:0.001:2.001; % k values
 cond_values = zeros(size(k_values)); % Store condition numbers
 
 for idx = 1:length(k_values)
