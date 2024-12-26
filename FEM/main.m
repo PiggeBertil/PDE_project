@@ -41,7 +41,7 @@ disp('The 50 smallest eigenvalues are:');
 %plot u for all f:s
 %pdeplot(p,e,t,XYData=eigenvectors(:,10))
 
-%% b)
+%% b) calculate errrors
 
 analytic_eigenvalues = [];
 
@@ -53,5 +53,29 @@ end
 
 analytic_eigenvalues = sort(analytic_eigenvalues);
 
+errors = abs(analytic_eigenvalues(1:50)-smallest_eigenvalues);
+
+max_error = max(errors);
+
+disp(max_error(1));
 
 
+%% Plot eigenvalues and weyl's approximation
+
+AREA = 2*pi;
+CIRCOMFRENCE = 2^(3/2)*pi;
+
+js = 1:50;
+
+weyls_eigenvalues_linear = js*4*pi/AREA;
+
+weyls_eigenvalues_curve = weyls_eigenvalues_linear + (CIRCOMFRENCE/AREA^(3/2))*(4*pi*js).^0.5;
+
+hold on
+plot(smallest_eigenvalues);
+plot(weyls_eigenvalues_curve);
+plot(weyls_eigenvalues_linear);
+
+legend('smallest eigenvalues','weyls curvelinear aproximation', 'weyls linear aproximation');
+
+title('Eigenvalues for D_4');
