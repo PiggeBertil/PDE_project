@@ -11,20 +11,16 @@ nu1 = nu1 ./ sqrt(rvec.^2 + rprimvec.^2);
 nu2 = nu2 ./ sqrt(rvec.^2 + rprimvec.^2);
 vecdsdt = sqrt(rprimvec.^2 + rvec.^2);
 
-k_values = 0:0.001:2.001; % k values
-cond_values = zeros(size(k_values)); % Store condition numbers
+index = 1;
+k_step = 20001;
+times_to_loop = linspace(0,2,k_step);
+cond_values = zeros(1,k_step); % Store condition numbers
 
-for idx = 1:length(k_values)
-    k = k_values(idx);
+for k = times_to_loop
     A_k = zeros(N, N);
-
     % Compute A_k
     for i = 1:N
         for j = 1:N
-            if k == 0
-                % For k = 0, Hankel function and taljare/namnare terms need special handling
-                A_k(i, j) = 0; % Since k=0 implies wave propagation is nonexistent
-            else
                 nu_i = [nu1(i), nu2(i)];
                 r_j = [y1(j), y2(j)];
                 r_i = [y1(i), y2(i)];
@@ -33,7 +29,6 @@ for idx = 1:length(k_values)
                 taljare = (1i*k/4)*hankel_func;
                 namnare = norm(difference);
                 A_k(i, j) = dot(nu_i, difference) * taljare / namnare;
-            end
         end
     end
 
@@ -45,16 +40,19 @@ for idx = 1:length(k_values)
     end
 
     % Compute inverse_matrix
-    inverse_matrix = -eye(N)/2 + 2*pi/N * A_k * diag(vecdsdt);
+    Kmat = (-eye(N)/2 + 2*pi/N * A_k * diag(vecdsdt));
 
     % Compute and store the condition number
-    cond_values(idx) = cond(inverse_matrix);
+    cond_values(index) = log10(cond(Kmat));
+    index = index + 1;
 end
-
+%%
 % Plot the condition number as a function of k
+% cond_values = log10(cond_values);
+
 figure;
-plot(k_values, cond_values, 'LineWidth', 1.5);
+plot(times_to_loop, cond_values, 'LineWidth', 0.6);
 xlabel('k-value');
 ylabel('Condition Number');
-title('Condition Number of inverse\_matrix vs. k');
+title('logrithmic plot Condition Number for each k');
 grid on;
