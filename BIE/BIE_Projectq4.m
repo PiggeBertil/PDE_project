@@ -1,4 +1,4 @@
-N=1000;
+N=300;
 tvec = linspace(-pi+2*pi/N, pi, N);
 rvec = 3+cos(4.*tvec+pi);
 rprimvec = -4*sin(4.*tvec+pi);
@@ -45,7 +45,6 @@ ufield = zeros(M,M);
 exactfield = zeros(M,M);
 
 gvec = (1i*k/4) * besselh(1,1,k*vecnorm([y1;y2]-p))./vecnorm([y1;y2]-p) .* (dot(([y1;y2]-p),[nu1;nu2]));
-%gvec = (nu1.*y1+nu2.*(y2-4))./(sqrt((y1).^2+(y2-4).^2).*(1i*k/4*besselh(1,k.*sqrt(y1.^2+(y2-4).^2))));
 hvec = (-eye(N)/2+ 2*pi/N * A_k * diag(vecdsdt))\gvec.';
 hvec = hvec.';
 
@@ -57,7 +56,7 @@ for ix1=1:M
         radius= 3+cos(4*t+pi); %formula for rvec
         if x1^2+ x2^2< radius^2
            phivec = (-1i / 4) * besselh(0, k * vecnorm([y1;y2] - [x1;x2])); %kernel expression in terms of xi, yi, nui, i=1,2
-           exactfield(ix1,ix2) = real(-1i/4*besselh(0,k*sqrt(x1.^2+(x2-4).^2)));
+           exactfield(ix1,ix2) = -1i/4*besselh(0,k*sqrt(x1.^2+(x2-4).^2));
            ufield(ix1,ix2) = (phivec*((hvec.* vecdsdt).')*2*pi/N);
         end
     end
@@ -70,17 +69,17 @@ re_exactfield = real(exactfield);
 im_exactfield = imag(exactfield);
 errorfield = log10(abs(re_ufield-re_exactfield));
 
-mean_real_sub = mean(re_ufield(M/3:M*2/3,M/3:M*2/3),'all');
-mean_sub_matrix = mean(re_exactfield(M/3:M*2/3,M/3:M*2/3), 'all');
+re_mean_numeric = mean(re_ufield(M/3:M*2/3,M/3:M*2/3),'all');
+re_mean_analytic = mean(re_exactfield(M/3:M*2/3,M/3:M*2/3), 'all');
 
 im_mean_numeric = mean(im_ufield(M/3:M*2/3,M/3:M*2/3),'all');
 im_mean_analytic = mean(im_exactfield(M/3:M*2/3,M/3:M*2/3),'all');
 
-re_error = log10(abs(re_ufield-mean_sub_matrix+mean_real_sub-re_exactfield));
+re_error = log10(abs(re_ufield-re_mean_numeric+re_mean_analytic-re_exactfield));
 im_error = log10(abs(im_ufield-im_mean_numeric+im_mean_analytic-im_exactfield));
 
 %% 
-imagesc(x1field, x2field, exactfield.')
+imagesc(x1field, x2field, re_exactfield.')
 axis xy
 colormap turbo
 pbaspect([1 1 1])
@@ -94,14 +93,6 @@ colormap turbo
 pbaspect([1 1 1])
 colorbar
 title('Numerical solution of u(x,y)')
-
-%%
-imagesc(x1field, x2field, errorfield.')
-axis xy
-colormap turbo
-pbaspect([1 1 1])
-colorbar
-title('Error plot')
 
 %%
 imagesc(x1field, x2field, re_error.')
@@ -118,3 +109,19 @@ colormap turbo
 pbaspect([1 1 1])
 colorbar
 title('Imaginary error plot')
+
+%%
+imagesc(x1field, x2field, im_exactfield.')
+axis xy
+colormap turbo
+pbaspect([1 1 1])
+colorbar
+title('Imaginary analytical solution')
+
+%%
+imagesc(x1field, x2field, im_ufield.')
+axis xy
+colormap turbo
+pbaspect([1 1 1])
+colorbar
+title('Imaginary numeric solution')
