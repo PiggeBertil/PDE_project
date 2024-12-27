@@ -1,3 +1,4 @@
+% Same initialization as before
 N=300;
 tvec = linspace(-pi+2*pi/N, pi, N);
 rvec = 3+cos(4.*tvec+pi);
@@ -10,11 +11,11 @@ nu2 = rvec .* sin(tvec) - rprimvec .* cos(tvec);
 nu1 = nu1 ./ sqrt( rvec.^2+ rprimvec.^2 );
 nu2 = nu2 ./ sqrt( rvec.^2+ rprimvec.^2 );
 
-A_k = zeros(N,N);
+A_k = zeros(N,N); % Initialize  
 vecdsdt = sqrt(rprimvec.^2+rvec.^2);
-p = [0;4];
-k = 1;
-
+p = [0;4]; % point outside D
+k = 1; % Define k-value
+% Modified computation for loop for Helmholtz equation
 for i = 1:N
     for j = 1:N
         nu_i = [nu1(i), nu2(i)];
@@ -23,14 +24,14 @@ for i = 1:N
         r_i = [y1(i), y2(i)];
         
         difference = r_i - r_j;
-        hankel_func = besselh(1,1,k*norm(difference));
-        taljare = (1i*k/4)*hankel_func;
+        hankel_func = besselh(1,1,k*norm(difference)); %phi_k is the Hankel function
+        taljare = (1i*k/4)*hankel_func; 
         namnare = (norm(difference)); 
     
-        A_k(i,j) = dot(nu_i, difference)*taljare/namnare;
+        A_k(i,j) = dot(nu_i, difference)*taljare/namnare; % computing elements
     end
 end
-
+% Updating diagonal elements with the limit
 for i = 1:N
     taljare = rprimvec(i)^2 - 0.5*rbisvec(i)*rvec(i)+0.5*rvec(i)^2;
     namnare = 2*pi*(rprimvec(i)^2 + rvec(i)^2)^(3/2);
@@ -43,7 +44,7 @@ x1field = linspace(-4, 4, M);
 x2field = linspace(-4, 4, M);
 ufield = zeros(M,M);
 exactfield = zeros(M,M);
-
+% Modified g function with Helmholtz criteria
 gvec = (1i*k/4) * besselh(1,1,k*vecnorm([y1;y2]-p))./vecnorm([y1;y2]-p) .* (dot(([y1;y2]-p),[nu1;nu2]));
 hvec = (-eye(N)/2+ 2*pi/N * A_k * diag(vecdsdt))\gvec.';
 hvec = hvec.';
@@ -71,10 +72,8 @@ errorfield = log10(abs(re_ufield-re_exactfield));
 
 re_mean_numeric = mean(re_ufield(M/3:M*2/3,M/3:M*2/3),'all');
 re_mean_analytic = mean(re_exactfield(M/3:M*2/3,M/3:M*2/3), 'all');
-
 im_mean_numeric = mean(im_ufield(M/3:M*2/3,M/3:M*2/3),'all');
 im_mean_analytic = mean(im_exactfield(M/3:M*2/3,M/3:M*2/3),'all');
-
 re_error = log10(abs(re_ufield-re_mean_numeric+re_mean_analytic-re_exactfield));
 im_error = log10(abs(im_ufield-im_mean_numeric+im_mean_analytic-im_exactfield));
 
