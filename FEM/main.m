@@ -36,10 +36,19 @@ smallest_eigenvalues = sorted_eigenvalues(1:50);
 
 % Display results
 disp('The 50 smallest eigenvalues are:');
-%plot(smallest_eigenvalues)
+plot(smallest_eigenvalues)
 
-%plot u for all f:s
-%pdeplot(p,e,t,XYData=eigenvectors(:,10))
+
+
+%% plot u for all 6 f:s 
+
+for i=1:6
+    subplot(3,2,i);
+    x= zeros(nn, 1);
+    x(intnodes)= eigenvectors(:,i); % adds zeros for boundary nodes in solution
+    pdeplot(p,e,t,XYData=x)
+end
+sgtitle('Eigenfunction to a favorite domain!')
 
 %% b) calculate errrors
 
