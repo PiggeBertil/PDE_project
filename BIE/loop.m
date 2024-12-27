@@ -51,7 +51,7 @@ end
 % cond_values = log10(cond_values);
 
 figure;
-plot(times_to_loop, cond_values, 'LineWidth', 0.6);
+plot(iterations, cond_vals, 'LineWidth', 0.6);
 xlabel('k-value');
 ylabel('Condition Number');
 title('logrithmic plot Condition Number for each k');
