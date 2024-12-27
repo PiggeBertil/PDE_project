@@ -1,3 +1,4 @@
+%% Question 4
 % Same initialization as before
 N=300;
 tvec = linspace(-pi+2*pi/N, pi, N);
@@ -48,7 +49,7 @@ exactfield = zeros(M,M);
 gvec = (1i*k/4) * besselh(1,1,k*vecnorm([y1;y2]-p))./vecnorm([y1;y2]-p) .* (dot(([y1;y2]-p),[nu1;nu2]));
 hvec = (-eye(N)/2+ 2*pi/N * A_k * diag(vecdsdt))\gvec.';
 hvec = hvec.';
-
+% Field computation 
 for ix1=1:M
    for ix2=1:M
         x1=x1field(ix1);
@@ -63,21 +64,22 @@ for ix1=1:M
     end
 end
 
+% Finding imaginary and real parts of the matrices
 t=0;
 re_ufield = real(ufield*exp(-1i*k*t));
 im_ufield = imag(ufield*exp(-1i*k*t));
 re_exactfield = real(exactfield);
 im_exactfield = imag(exactfield);
-errorfield = log10(abs(re_ufield-re_exactfield));
-
+% Finding the average over a square
 re_mean_numeric = mean(re_ufield(M/3:M*2/3,M/3:M*2/3),'all');
 re_mean_analytic = mean(re_exactfield(M/3:M*2/3,M/3:M*2/3), 'all');
 im_mean_numeric = mean(im_ufield(M/3:M*2/3,M/3:M*2/3),'all');
 im_mean_analytic = mean(im_exactfield(M/3:M*2/3,M/3:M*2/3),'all');
+% Computing the error
 re_error = log10(abs(re_ufield-re_mean_numeric+re_mean_analytic-re_exactfield));
 im_error = log10(abs(im_ufield-im_mean_numeric+im_mean_analytic-im_exactfield));
 
-%% 
+%% Plotting the different outputs
 imagesc(x1field, x2field, re_exactfield.')
 axis xy
 colormap turbo
