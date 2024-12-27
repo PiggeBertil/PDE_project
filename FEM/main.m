@@ -9,7 +9,7 @@ for element = 1 : size(t, 2)
     %Calculate A_nn and B_nn for adjecent node.
     nn = t(1:3, element);
     A(nn, nn) = A(nn,nn) + IntMatrix( p(:, nn) );
-    B(nn, nn) = B(nn, nn) + IntMatrix2( p(:, nn) );
+    B(nn, nn) = B(nn, nn) + IntMatrixB( p(:, nn) );
 end
 
 
@@ -88,3 +88,12 @@ plot(weyls_eigenvalues_linear);
 legend('smallest eigenvalues','weyls curvelinear aproximation', 'weyls linear aproximation');
 
 title('Eigenvalues for D_4');
+
+%% Check convergence rate
+
+N = [102, 375, 1437, 5625];
+Errors = [246, 71.3, 18.0, 4.51];
+
+scatter(N, Errors);
+
+set(gca,'xscale','log');
