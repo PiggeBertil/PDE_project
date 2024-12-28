@@ -1,4 +1,4 @@
-N=300;
+N=1000;
 tvec = linspace(-pi+2*pi/N, pi, N);
 rvec = 3+cos(4*tvec+pi);
 rprimvec = -4*sin(4.*tvec+pi);
@@ -46,7 +46,7 @@ g_y = dy_u_func(y1,y2).*nu2;
 gvec = g_y'+g_x';
 %Finding the augmented matrix
 Aug_matrix = (-eye(N)/2+ 2*pi/N* A_aug* diag(vecdsdt)) + ones(N);
-num_con_nr = cond(-eye(N)/2+ 2*pi/N* A_aug* diag(vecdsdt));
+num_cond_nr = cond(-eye(N)/2+ 2*pi/N* A_aug* diag(vecdsdt));
 aug_cond_nr = cond(Aug_matrix); %Finding the conditional number using the augmented matrix
 hvec = Aug_matrix\gvec; %computing h using the augmented matrix
 hvec = hvec.';
