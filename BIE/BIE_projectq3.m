@@ -45,7 +45,8 @@ g_x = dx_u_func(y1,y2).*nu1;
 g_y = dy_u_func(y1,y2).*nu2;
 gvec = g_y'+g_x';
 %Finding the augmented matrix
-Aug_matrix = (-eye(N)/2+ 2*pi/N* A_aug* diag(vecdsdt)) + ones(N);
+Aug_matrix = (-eye(N)/2+ 2*pi/N* (A_aug+ ones(N))* diag(vecdsdt)) ;
+Inv_matrix = (-eye(N)/2+ 2*pi/N* A_aug* diag(vecdsdt));
 num_cond_nr = cond(-eye(N)/2+ 2*pi/N* A_aug* diag(vecdsdt));
 aug_cond_nr = cond(Aug_matrix); %Finding the conditional number using the augmented matrix
 hvec = Aug_matrix\gvec; %computing h using the augmented matrix
